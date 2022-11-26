@@ -18,6 +18,21 @@ def extract_params(response, weather_params):
         result['Wind'] = (f"{response['wind']['speed']} m/s, {response.json()['wind']['deg']}°")
     return result
 
+
+def get_description_by_coords(coords):
+    params = {
+        "lat": coords[0],
+        "lon": coords[1],
+        "appid": "a6d4686bc37eb06407d816dd402239fa",
+        "units": "metric",
+    }
+    url = "https://api.openweathermap.org/data/2.5/weather"
+    response = requests.get(url, params)
+    res_weather = response.json()['weather'][0]
+
+    return f"{res_weather['main']}({res_weather['description']})"
+
+
 def get_week_weather_by_coords(coords, weather_params):
     params = {
         "lat": coords[0],
@@ -34,6 +49,7 @@ def get_week_weather_by_coords(coords, weather_params):
             **extract_params(timestamp, weather_params)
         })
     return timestamps
+
 
 def get_weather_by_coords(coords, weather_params):
     params = {
@@ -92,7 +108,6 @@ class HttpGetHandler(BaseHTTPRequestHandler):
                     self.wfile.write(f"{key}: {value}\n".encode())
 
         if route == '/weather-by-city':
-
             if 'city' not in query_components:
                 self.send_response(400)
                 self.send_header("Content-type", "text/plain; charset=utf-8")
@@ -128,6 +143,19 @@ class HttpGetHandler(BaseHTTPRequestHandler):
                 for key, value in weather_timestamp.items():
                     self.wfile.write(f"{key}: {value}\n".encode())
                 self.wfile.write('\n'.encode())
+
+        if route == '/description-by-coords':
+            if 'lat' not in query_components or 'lon' not in query_components:
+                self.send_response(400)
+                self.send_header("Content-type", "text/plain; charset=utf-8")
+                self.end_headers()
+                self.wfile.write("Location not provided".encode())
+
+            weather = get_description_by_coords([query_components["lat"], query_components["lon"]])
+            self.send_response(200)
+            self.send_header("Content-type", "text/plain; charset=utf-8")
+            self.end_headers()
+            self.wfile.write(f'Weather description:\n{weather}'.encode())
 
 
 def run(server_class=HTTPServer, handler_class=HttpGetHandler):
