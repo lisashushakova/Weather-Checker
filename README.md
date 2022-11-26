@@ -81,10 +81,10 @@ Returns:
     Weather description:
     Clouds (overcast clouds)
 
-##Docker
-####Docker image creation:
+## Docker
+#### Docker image creation:
     docker build -t weather-checker-image .  
-####Docker container creation:
+#### Docker container creation:
     docker create -p 8000:8000 --name weather-checker-container  weather-checker-image
-####Start container:
+#### Start container:
     docker start weather-checker-container 
