@@ -1,6 +1,19 @@
 from http.server import BaseHTTPRequestHandler
 from http.server import HTTPServer
 from urllib.parse import parse_qs
+import requests
+
+
+def get_temp_by_coords(coords):
+    params = {
+        "lat": coords[0],
+        "lon": coords[1],
+        "appid": "a6d4686bc37eb06407d816dd402239fa",
+        "units": "metric"
+    }
+    url = "https://api.openweathermap.org/data/2.5/weather"
+    response = requests.get(url, params)
+    return response.json()['main']['temp']
 
 
 class HttpGetHandler(BaseHTTPRequestHandler):
@@ -12,11 +25,12 @@ class HttpGetHandler(BaseHTTPRequestHandler):
             old_key = list(query_components.keys())[0]
             route, new_key = old_key.split('?')
             query_components[new_key] = query_components.pop(old_key)
-
-        self.send_response(200)
-        self.send_header("Content-type", "text/plain; charset=utf-8")
-        self.end_headers()
-        self.wfile.write(f"TEST RESPONSE. QUERY: {query_components}".encode())
+        if route == '/temp-by-coords':
+            temp = get_temp_by_coords([query_components["lat"], query_components["lon"]])
+            self.send_response(200)
+            self.send_header("Content-type", "text/plain; charset=utf-8")
+            self.end_headers()
+            self.wfile.write(f"{temp} °C".encode())
 
 
 def run(server_class=HTTPServer, handler_class=HttpGetHandler):
