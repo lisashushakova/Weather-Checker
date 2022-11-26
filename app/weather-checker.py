@@ -1,4 +1,5 @@
 import json
+import os
 from http.server import BaseHTTPRequestHandler
 from http.server import HTTPServer
 from urllib.parse import parse_qs
@@ -64,7 +65,7 @@ def get_weather_by_coords(coords, weather_params):
 
 
 def get_weather_by_city(city_name, weather_params):
-    with open('city.list.json', encoding='utf-8') as file:
+    with open(os.path.join(os.path.dirname(__file__), 'city.list.json'), encoding='utf-8') as file:
         cities = json.load(file)
         for city in cities:
             if city['name'] == city_name:
