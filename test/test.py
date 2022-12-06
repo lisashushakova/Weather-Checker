@@ -59,4 +59,8 @@ class WeatherCheckerTests(unittest.TestCase):
 
 
 if __name__ == '__main__':
+    p = subprocess.Popen(["python", "./app/weather-checker.py"])
+    time.sleep(3)
     unittest.main()
+    p.terminate()
+    
