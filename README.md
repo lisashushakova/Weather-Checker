@@ -1,4 +1,12 @@
 # Weather-Checker
+
+## Tests
+
+Main branch tests: [![tests pass status](https://github.com/lisashushakova/Weather-Checker/actions/workflows/test-pipeline.yml/badge.svg?branch=main)](https://github.com/lisashushakova/Weather-Checker/actions/workflows/test-pipeline.yml)
+
+Develop branch tests: [![tests pass status](https://github.com/lisashushakova/Weather-Checker/actions/workflows/test-pipeline.yml/badge.svg?branch=develop)](https://github.com/lisashushakova/Weather-Checker/actions/workflows/test-pipeline.yml)
+## Application
+
 Weather-checker app allows you to retrieve information about weather conditions 
 ### Getting current temperature by coordinates (lat and lon):
 Route:
